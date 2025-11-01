@@ -13,17 +13,19 @@ if (!json.readme) {
   readmeDotMd = path.join(__dirname, 'readme.md');
   if (!fs.existsSync(readmeDotMd)) {
     readmeDotMd = path.join(__dirname, 'README.md');
+    if (!fs.existsSync(readmeDotMd)) {
+      readmeDotMd = null;
+    }
   }
 }
 
-
 if (!json.changelogs) {
-  if (!fs.existsSync(changelogDotMd)) {
-    changelogDotMd = path.join(__dirname, 'CHANGELOG.md');
-  }
-
+  changelogDotMd = path.join(__dirname, 'CHANGELOG.md');
   if (!fs.existsSync(changelogDotMd)) {
     changelogDotMd = path.join(__dirname, 'changelog.md');
+    if (!fs.existsSync(changelogDotMd)) {
+      changelogDotMd = null;
+    }
   }
 }
 
@@ -51,19 +53,20 @@ zip
   });
 
 function loadFile(root, folder) {
-  const distFiles = fs.readdirSync(folder);
+  const distFiles = fs.readdirSync(folder, { withFileTypes: true });
   distFiles.forEach((file) => {
+    const fileName = file.name;
+    const filePath = path.join(folder, fileName);
+    const rootPath = path.join(root, fileName);
 
-    const stat = fs.statSync(path.join(folder, file));
-
-    if (stat.isDirectory()) {
-      zip.folder(file);
-      loadFile(path.join(root, file), path.join(folder, file));
+    if (file.isDirectory()) {
+      zip.folder(fileName);
+      loadFile(rootPath, filePath);
       return;
     }
 
-    if (!/LICENSE.txt/.test(file)) {
-      zip.file(path.join(root, file), fs.readFileSync(path.join(folder, file)));
+    if (!/LICENSE.txt/.test(fileName)) {
+      zip.file(rootPath, fs.readFileSync(filePath));
     }
   });
 }

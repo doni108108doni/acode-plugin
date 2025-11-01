@@ -23,4 +23,6 @@ if (window.acode) {
   acode.setPluginUnmount(plugin.id, () => {
     acodePlugin.destroy();
   });
+} else {
+  console.warn('Acode API not available');
 }
