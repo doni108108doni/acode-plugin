@@ -8,6 +8,7 @@ function packZip() {
   exec("node ./pack-zip.js", (err, stdout, stderr) => {
     if (err) {
       console.error("Error packing zip:", err);
+      if (stderr) console.error(stderr);
       return;
     }
     console.log(stdout.trim());
@@ -18,7 +19,11 @@ function packZip() {
 const zipPlugin = {
   name: "zip-plugin",
   setup(build) {
-    build.onEnd(() => {
+    build.onEnd((result) => {
+      if (result.errors.length > 0) {
+        console.error("Build failed with errors, skipping zip packaging");
+        return;
+      }
       packZip();
     });
   },
@@ -37,21 +42,27 @@ let buildConfig = {
 
 // Main function to handle both serve and production builds
 (async function () {
-  if (isServe) {
-    console.log("Starting development server...");
+  try {
+    if (isServe) {
+      console.log("Starting development server...");
 
-    // Watch and Serve Mode
-    const ctx = await esbuild.context(buildConfig);
+      // Watch and Serve Mode
+      const ctx = await esbuild.context(buildConfig);
 
-    await ctx.watch();
-    const { host, port } = await ctx.serve({
-      servedir: ".",
-      port: 3000,
-    });
+      await ctx.watch();
+      const { host, port } = await ctx.serve({
+        servedir: ".",
+        port: 3000,
+      });
 
-  } else {
-    console.log("Building for production...");
-    await esbuild.build(buildConfig);
-    console.log("Production build complete.");
+      console.log(`Server running at http://${host}:${port}`);
+    } else {
+      console.log("Building for production...");
+      await esbuild.build(buildConfig);
+      console.log("Production build complete.");
+    }
+  } catch (error) {
+    console.error("Build failed:", error);
+    process.exit(1);
   }
 })();
