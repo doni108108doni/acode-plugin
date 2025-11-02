@@ -64,5 +64,5 @@ let buildConfig = {
   } catch (error) {
     console.error("Build failed:", error);
     process.exit(1);
-  }
+  }uu
 })();
