@@ -7,6 +7,7 @@ Read acode plugin [documentation](https://docs.acode.app/docs/) to develop plugi
 For a quick setup of the development environment, run:
 
 ```bash
+chmod +x setup.sh
 ./setup.sh
 ```
 

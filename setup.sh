@@ -20,9 +20,17 @@ echo "Step 1: Checking npm installation..."
 if command_exists npm; then
     echo "✓ npm is already installed (version: $(npm --version))"
 else
-    echo "Installing npm..."
-    curl -qL https://www.npmjs.com/install.sh | sh
-    echo "✓ npm installed successfully"
+    echo "npm is not installed."
+    echo "For security reasons, this script does not install npm automatically."
+    echo "Please install Node.js and npm using your system's package manager or a version manager like nvm."
+    echo ""
+    echo "Examples:"
+    echo "  On Ubuntu/Debian: sudo apt update && sudo apt install nodejs npm"
+    echo "  On macOS: brew install node"
+    echo "  Using nvm: https://github.com/nvm-sh/nvm"
+    echo ""
+    echo "After installing Node.js and npm, re-run this setup script."
+    exit 1
 fi
 echo ""
 
@@ -33,7 +41,12 @@ if command_exists zed; then
 else
     echo "Installing Zed editor..."
     curl -f https://zed.dev/install.sh | sh
-    echo "✓ Zed editor installed successfully"
+    if command_exists zed; then
+        echo "✓ Zed editor installed successfully"
+    else
+        echo "✗ Zed editor installation failed. Please check your system and try again." >&2
+        exit 1
+    fi
 fi
 echo ""
 
@@ -43,7 +56,7 @@ if [ -d "acodex_server" ]; then
     echo "✓ acodex_server repository already exists"
     echo "  Updating repository..."
     cd acodex_server
-    git pull
+    git pull || echo "Warning: Could not update repository"
     cd ..
 else
     echo "Cloning acodex_server repository..."
