@@ -1,18 +1,18 @@
 {
   "$schema": "https://acode.app/schema/plugin/v0.1.0.json",
-  "id": "acode.plugin",
-  "name": "Plugin",
+  "id": "acode.plugin.fullaccess",
+  "name": "Full Access Plugin",
   "main": "main.js",
   "version": "1.0.0",
-  "repository": "https://github.com/Acode-Foundation/acode-plugin.git",
+  "repository": "https://github.com/doni108108doni/acode-plugin.git",
   "icon": "icon.png",
   "minVersionCode": 290,
   "license": "MIT",
-  "keywords": [],
+  "keywords": ["full-access", "projects", "filesystem", "permissions", "all-projects"],
   "price": 0,
   "author": {
-    "name": "",
+    "name": "doni108108doni",
     "email": "",
-    "github": ""
+    "github": "doni108108doni"
   }
 }
