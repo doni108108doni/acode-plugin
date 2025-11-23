@@ -54,18 +54,21 @@ echo "Step 3: Checking acodex_server repository..."
 if [ -d "acodex_server" ]; then
     echo "✓ acodex_server repository already exists"
     echo "  Updating repository..."
-    cd acodex_server
-    if ! git pull 2>git_pull_error.log; then
-        echo "✗ Could not update repository. See details below:" >&2
-        cat git_pull_error.log >&2
-        echo "Please manually review the repository for issues such as merge conflicts, network problems, or uncommitted changes." >&2
-        echo "You may need to resolve these issues before continuing." >&2
-        rm -f git_pull_error.log
-        cd .. || { echo "Error: Failed to change directory from acodex_server to parent directory."; exit 1; }
+    (
+        cd acodex_server || exit 1
+        if ! git pull 2>../git_pull_error.log; then
+            echo "✗ Could not update repository. See details below:" >&2
+            cat ../git_pull_error.log >&2
+            echo "Please manually review the repository for issues such as merge conflicts, network problems, or uncommitted changes." >&2
+            echo "You may need to resolve these issues before continuing." >&2
+            exit 1
+        fi
+    )
+    exit_code=$?
+    rm -f git_pull_error.log
+    if [ $exit_code -ne 0 ]; then
         exit 1
     fi
-    rm -f git_pull_error.log
-    cd .. || { echo "Error: Failed to change directory from acodex_server to parent directory."; exit 1; }
 else
     echo "Cloning acodex_server repository..."
     if command_exists gh; then
