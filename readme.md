@@ -12,11 +12,13 @@ chmod +x setup.sh
 ```
 
 This script will:
-- Install npm (if not already installed)
-- Install Zed editor (if not already installed)
+- Check for npm (if not found, provides manual installation instructions)
+- Check for Zed editor (if not found, provides manual installation instructions)
 - Clone the acodex_server repository
 - Install project dependencies
 - Build the project
+
+**Note:** The script requires npm and Zed editor to be installed manually for security reasons. It will not automatically install these tools.
 
 ## Usage
 

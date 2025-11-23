@@ -15,7 +15,7 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
-# Install npm if not already installed
+# Check npm installation
 echo "Step 1: Checking npm installation..."
 if command_exists npm; then
     echo "✓ npm is already installed (version: $(npm --version))"
@@ -34,19 +34,18 @@ else
 fi
 echo ""
 
-# Install Zed editor if not already installed
+# Check Zed editor installation
 echo "Step 2: Checking Zed editor installation..."
 if command_exists zed; then
     echo "✓ Zed editor is already installed"
 else
-    echo "Installing Zed editor..."
-    curl -f https://zed.dev/install.sh | sh
-    if command_exists zed; then
-        echo "✓ Zed editor installed successfully"
-    else
-        echo "✗ Zed editor installation failed. Please check your system and try again." >&2
-        exit 1
-    fi
+    echo "Zed editor is not installed."
+    echo "For security reasons, this script does not install Zed editor automatically."
+    echo "Please install Zed editor manually from the official website:"
+    echo "  https://zed.dev/download"
+    echo ""
+    echo "After installing Zed editor, re-run this setup script."
+    exit 1
 fi
 echo ""
 
@@ -56,8 +55,17 @@ if [ -d "acodex_server" ]; then
     echo "✓ acodex_server repository already exists"
     echo "  Updating repository..."
     cd acodex_server
-    git pull || echo "Warning: Could not update repository"
-    cd ..
+    if ! git pull 2>git_pull_error.log; then
+        echo "✗ Could not update repository. See details below:" >&2
+        cat git_pull_error.log >&2
+        echo "Please manually review the repository for issues such as merge conflicts, network problems, or uncommitted changes." >&2
+        echo "You may need to resolve these issues before continuing." >&2
+        rm -f git_pull_error.log
+        cd .. || { echo "Error: Failed to change directory from acodex_server to parent directory."; exit 1; }
+        exit 1
+    fi
+    rm -f git_pull_error.log
+    cd .. || { echo "Error: Failed to change directory from acodex_server to parent directory."; exit 1; }
 else
     echo "Cloning acodex_server repository..."
     if command_exists gh; then
@@ -86,6 +94,6 @@ echo "Setup completed successfully!"
 echo "=========================================="
 echo ""
 echo "You can now start development with:"
-echo "  npm run dev    - Start development server"
+echo "  npm run dev    - Start development build (esbuild serve mode)"
 echo "  npm run build  - Build for production"
 echo ""
