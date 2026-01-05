@@ -52,10 +52,4 @@ npm run build
 
 ## License
 
-MIT License - see LICE
-NSE file for details
-
-o
-
-
-
+MIT License - see LICENSE file for details
