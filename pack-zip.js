@@ -22,10 +22,10 @@ if (!json.changelogs) {
   
   if (!fs.existsSync(changelogDotMd)) {
     changelogDotMd = path.join(__dirname, 'CHANGELOG.md');
-  }
-
-  if (!fs.existsSync(changelogDotMd)) {
-    changelogDotMd = path.join(__dirname, 'changelog.md');
+    
+    if (!fs.existsSync(changelogDotMd)) {
+      changelogDotMd = null; // No changelog file found
+    }
   }
 }
 
