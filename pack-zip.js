@@ -7,7 +7,7 @@ const pluginJSON = path.join(__dirname, 'plugin.json');
 const distFolder = path.join(__dirname, 'dist');
 const json = JSON.parse(fs.readFileSync(pluginJSON, 'utf8'));
 let readmeDotMd;
-let changelogDotMd;
+let changelogDotMd = path.join(__dirname, 'changelog.md');
 
 if (!json.readme) {
   readmeDotMd = path.join(__dirname, 'readme.md');
